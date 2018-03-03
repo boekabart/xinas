@@ -1,0 +1,8 @@
+*.obj
+.vs/
+*.user
+.build
+.built
+/src/xinas/DebugWin32
+/src/xinas/ReleaseWin32
+/src/xinas/log.txt

@@ -18,5 +18,8 @@
 #error
 #endif
 
-#include <citk.h>
+#define USING_CITKTYPES
+#define USING_CITK
+
+#include <citkfull.h>
 using namespace citk;

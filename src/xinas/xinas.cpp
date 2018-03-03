@@ -15,15 +15,12 @@
 #define MAX_VEL 25.0f
 #define MIN_VEL 5.0f
 
-#pragma comment (lib,"Direct3D8S.lib")
-#pragma comment (lib,"citkIOS.lib")
-#ifdef _XBOX
-# pragma comment (lib,"XboxDevsS.lib")
-#else
-# pragma comment (lib,"OpenGLS.lib")
-# pragma comment (lib,"glu32.lib")
-# pragma comment (lib,"Opengl32.lib")
-#endif
+//#pragma comment (lib,"Direct3D8S.lib")
+#pragma comment (lib,"citkCore.lib")
+#pragma comment (lib,"citkIO.lib")
+#pragma comment (lib,"RT_gl.lib")
+#pragma comment (lib,"glu32.lib")
+#pragma comment (lib,"Opengl32.lib")
 
 //-----------------------------------------------------------------------------
 // Name: main()
@@ -111,12 +108,12 @@ struct DPlayer
 
 		void		Update();
 
-		bool		ap;
+		bool		autoPilot;
 		playmode_t	PlayMode;
 
 		DSmartBool	ModeButton;
 
-		IO() : ap(true), nPosAxis(-1), nNegAxis(-1), nPosBtn(-1), nNegBtn(-1), PlayMode(pmDirect) {}
+		IO() : autoPilot(true), nPosAxis(-1), nNegAxis(-1), nPosBtn(-1), nNegBtn(-1), PlayMode(pmDirect) {}
 	} io;
 
 	Plane		Goal;
@@ -244,7 +241,7 @@ void DPlayer::IO::Update()
 
 	hwio->Refresh();
 
-	if (ap || !hwio->GetD(Plugged)) // ap!
+	if (autoPilot || !hwio->GetD(Plugged)) // ap!
 		return;
 
 	Pos = (GetD(hwio, nPosBtn) || GetA(hwio,nPosAxis,aPosDir,aPosNull));
@@ -277,8 +274,8 @@ void DPlayer::UpdatePos( float dt )
 			io.PlayMode=pmDigital;
 	}
 
-	bool direct = (io.nAxis>=0) && io.PlayMode==pmDirect &&!io.ap && io.hwio && io.hwio->GetD(Plugged);
-	bool accel = (io.nAxis>=0) && io.PlayMode==pmAccel &&!io.ap && io.hwio && io.hwio->GetD(Plugged);
+	bool direct = (io.nAxis>=0) && io.PlayMode==pmDirect &&!io.autoPilot && io.hwio && io.hwio->GetD(Plugged);
+	bool accel = (io.nAxis>=0) && io.PlayMode==pmAccel &&!io.autoPilot && io.hwio && io.hwio->GetD(Plugged);
 	bool digital = !direct && !accel;
 	if (direct)
 		Dir = 1.0 * io.hwio->GetA(io.nAxis)*io.mAxis;
@@ -467,7 +464,7 @@ void DBall::UpdateBall( float dt, ArrayPtr<DPlayer>& pl ) // pl for goals only
 			}
 		}
 	}
-	for (q=0; q<pl.Count(); q++)
+	for (int q=0; q<pl.Count(); q++)
 	{
 		DPlayer& p = *pl[q];
 
@@ -577,9 +574,11 @@ void DGame::CreateScene()
 	if (!root)
 	{
 		root.New();
+		root->Name = "Root";
 
 		PGroup camroot;
 		camroot.New();
+		camroot->Name = "CamRoot";
 		camroot->SetParent(root);
 
 		PCamera cam;
@@ -591,14 +590,16 @@ void DGame::CreateScene()
 		cam->SetFOV(50);
 
 		spec.New();
-		spec->Viewport.SetBackgroundColor(COL_RED*0.1f);
+		spec->Viewport.SetBackgroundColor(COL_RED*0.5f);
 		spec->UseVideo(true);
 		spec->UseAudio(false);
 		spec->RegisterWithService();
 		spec->SetCamera(cam);
 		spec->Viewport.SetVerCameraRect(-1,1);
 //		spec->SetVideoDevice( (CTRenderTarget*)citk_ObtainDeviceByName("CTRenderTarget_GL"));
+		spec->Name = "Spectator";
 		spec->Enable();
+		citk_ShowPropertyPage(spec);
 
 		P3DText txt;
 		txt.New();
@@ -608,11 +609,13 @@ void DGame::CreateScene()
 		txt->MoveToZ(5);
 		txt->SetText("Hallo");
 		txt->SetParent(root);
+		txt->Name = "text";
 		PMotionController mmm;
 		mmm.New();
 		mmm->MotionInfo.AngVel.x = 3.0;
 		mmm->SetObject(txt);
 		mmm->Enable();
+		mmm->Name = "TextMotionController";
 
 		PMaterialProperty mp;
 		mp.New();
@@ -627,12 +630,15 @@ void DGame::CreateScene()
 
 		balls.New();
 		balls->SetParent(root);
+		balls->Name = "Balls";
 
 		bats.New();
 		bats->SetParent(root);
+		bats->Name = "Batjes";
 
 		field.New();
 		field->SetParent(root);
+		field->Name = "Field";
 
 		PGroup g2;
 		g2.New();
@@ -640,18 +646,21 @@ void DGame::CreateScene()
 		g2->MoveToY(-10);
 		g2->ScaleBy(4);
 		g2->CreateRenderState()->SetRenderProperty( mp );
+		g2->Name = "MotionField";
 
 		PMotionController mc;
 		mc.New();
 		mc->MotionInfo.AngVel.y = 0.3f;
 		mc->SetObject(g2);
 		mc->Enable();
+		mc->Name = "FieldMotionController";
 
 		PGroup g;
 		g.New();
 		g->SetParent(field);
 		g->MoveToY(-BAL_RAD - 0.5 * dik);
 		g->CreateRenderState()->SetRenderProperty( mp );
+		g->Name = "StaticField";
 		PBox b;
 		b.New();
 		b->SetDimensions( Vector( 0.95*d, dik, 0.95*d ) );
@@ -661,6 +670,7 @@ void DGame::CreateScene()
 			for (int z=0; z<n; z++)
 			{
 				float rz = -rad + 0.5 * d + z*d;
+				
 				PDrawable d;
 				d.New();
 				d->MoveToX(rx);
@@ -675,6 +685,7 @@ void DGame::CreateScene()
 				d->SetParent(g2);
 			}
 		}
+		root->CreateBoundingVolume(CTDrawable::kind_t::DRAW);
 	}
 
 	for ( q=0; q<DSinas::Sini.Count(); q++)
@@ -690,6 +701,7 @@ void DGame::CreateScene()
 			g.New();
 			g->SetParent(s->Owner?bats:balls);
 			g->CreateRenderState()->SetRenderProperty(mp);
+			g->Name = s->Owner?"BatjeGroup":"SinasGroup";
 			s->Viz = g;
 
 			PSphere sp;
@@ -699,6 +711,7 @@ void DGame::CreateScene()
 			d.New();
 			d->SetShape(sp);
 			d->SetParent(g);
+			d->Name = "Bal";
 
 			PBox bx;
 			bx.New();
@@ -707,6 +720,7 @@ void DGame::CreateScene()
 			d.New();
 			d->SetShape(bx);
 			d->SetParent(g);
+			d->Name = "SpinBox";
 
 			PMotionController mc;
 			mc.New();
@@ -768,6 +782,7 @@ void DGame::CreateScene()
 		g->SetDirection(p->Goal.normal);
 		pl[q]->Bat.Viz->SetAz(g->GetAz()+90 DEGREES);
 		g->CreateRenderState()->SetRenderProperty(mp);
+		g->Name = "GoalGroup";
 
 		Vector along = p->Goal.normal%Vector(0,1,0);
 
@@ -789,6 +804,7 @@ void DGame::CreateScene()
 			d->MoveToX( p->GoalHWidth * 2.0f*w/(float)n );
 			d->SetShape(b);
 			d->SetParent(g);
+			d->Name = "Goal";
 		}
 
 		PGroup x;
@@ -1018,7 +1034,7 @@ void DGame::UpdateScene( float dt )
 #ifdef _XBOX
 		bool hide = Waiting && (s->Owner->io.ap || !s->Owner->io.hwio || !s->Owner->io.hwio->GetD(Plugged));
 #else
-		bool hide = Waiting && s->Owner->io.ap;
+		bool hide = Waiting && s->Owner->io.autoPilot;
 #endif
 		if (hide)
 			s->Viz->Hide();
@@ -1061,7 +1077,7 @@ void DGame::UpdateGame( float dt )
 		dt = 0.0f;
 
 	CountDown -= dt;
-	if (CountDown>=0)
+	if (CountDown >= 0)
 		dt = 0.0f;
 
 	if (Winner>=0)
@@ -1087,7 +1103,7 @@ void DGame::UpdateGame( float dt )
 				if (!pl[q]->io.ap)
 					continue;
 #else
-			if (!pl[q]->io.ap)
+			if (!pl[q]->io.autoPilot)
 				continue;
 #endif
 			pl[q]->io.PlayMode = DPlayer::pmDigital;
@@ -1242,6 +1258,8 @@ void DGame::Interface( float dt )
 		int c = getch();
 		if (c==27)
 			Quit = true;
+		if (c=='i')
+			citk_ShowPropertyPage(root);
 		if (c=='p')
 			Waiting = true;
 		if (c=='s')
@@ -1265,14 +1283,14 @@ void DGame::Interface( float dt )
 			pl[q]->io.Pos = (c==MapPos[q]);
 			pl[q]->io.Neg = (c==MapNeg[q]);
 			if ( pl[q]->io.Pos || pl[q]->io.Neg )
-				pl[q]->io.ap = false;
+				pl[q]->io.autoPilot = false;
 		}
 	}
 	else
 	{
 		for (int q=0; q<pl.Count(); q++)
 		{
-			if (pl[q]->io.ap)
+			if (pl[q]->io.autoPilot)
 				continue;
 
 			pl[q]->io.Pos = pl[q]->io.Neg = false;
@@ -1288,6 +1306,11 @@ void PlayGame()
 	Game.CreateBalls(1);
 	Game.CreatePlayers(4);
 	Game.CreateScene();
+	citk_DoFrame();
+
+	PServiceManager servMan;
+	servMan.Acquire();
+	citk_ShowPropertyPage(servMan);
 
 	while (!Game.Quit)
 	{
@@ -1304,6 +1327,8 @@ void PlayGame()
 	}
 }
 
+ulong citk::DTransform::timeid = 0;
+
 class XBoxDebugFrontEnd : public CTFrontEnd
 {
 	DFile f;
@@ -1311,7 +1336,7 @@ class XBoxDebugFrontEnd : public CTFrontEnd
 public:
 	XBoxDebugFrontEnd() { RegisterWithService(); }
 
-	virtual void DebugString(cstr_t m) { if (!f.Opened()) f.Create("D:\\log.txt"); f.WriteLine(m); }
+	virtual void DebugString(cstr_t m) { if (!f.Opened()) f.Create(".\\log.txt"); f.WriteLine(m); }
 	virtual void	ErrorManagerMessage ( errorstruct_t* error )
 	{
 		DebugString(error->msg);
@@ -1321,22 +1346,21 @@ public:
 void __cdecl main()
 {
 	citk_Init();
+	citk_LoadAllPlugIns();
+
+	PDeviceManager devMan;
+	devMan.Acquire();
+	devMan->CreateAllDevices();
+
 	new XBoxDebugFrontEnd;
 
-	REGISTER_CLASSES( Direct3D8 );
-	REGISTER_CLASSES( citkIO );
+	//REGISTER_CLASSES( Direct3D8 );
+	//REGISTER_CLASSES( citkIO );
 
-	//just in case:
-#ifdef _XBOX
-	REGISTER_CLASSES( XboxDevs );
-#else
-	REGISTER_CLASSES( OpenGL );
 	citk_CreateClassByName("CTConsoleFrontEnd");
-#endif
-	// end just
 
-	PSceneCacheManager scm; scm->SetProperty("Path","d:\\media\\");
-	PTextureManager tm; tm->SetProperty("Path", "d:\\media\\");
+	PSceneCacheManager scm; scm->SetProperty("Path","files");
+	PTextureManager tm; tm->SetProperty("Path", "files");
 
 	PlayGame();
 

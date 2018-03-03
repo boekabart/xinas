@@ -1,48 +1,42 @@
-Microsoft Visual Studio Solution File, Format Version 8.00
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Xinas", "src\xinas\Xinas.vcproj", "{0A7E60F8-690B-4B53-AC70-569793D3B303}"
-	ProjectSection(ProjectDependencies) = postProject
-		{5F1D2B5C-1757-4DC5-BD9F-2873C6A024E1} = {5F1D2B5C-1757-4DC5-BD9F-2873C6A024E1}
-		{3F5C1DBC-177A-4590-A999-4C5996EAFCFD} = {3F5C1DBC-177A-4590-A999-4C5996EAFCFD}
-		{87C23CC5-9CB3-43F2-AB4D-FF638945324C} = {87C23CC5-9CB3-43F2-AB4D-FF638945324C}
-	EndProjectSection
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2036
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Xinas", "src\xinas\Xinas.vcxproj", "{0A7E60F8-690B-4B53-AC70-569793D3B303}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Direct3D8", "d:\dev\CID\InterVision\Devices\Direct3D8\Direct3D8.vcproj", "{3F5C1DBC-177A-4590-A999-4C5996EAFCFD}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "citkIO", "D:\dev\CID\InterVision\PlugIns\citkIO\citkIO.vcproj", "{5F1D2B5C-1757-4DC5-BD9F-2873C6A024E1}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenGLStatic", "D:\dev\CIS\graphics\opengl2\OpenGLStatic.vcproj", "{87C23CC5-9CB3-43F2-AB4D-FF638945324C}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
 EndProject
 Global
-	GlobalSection(SolutionConfiguration) = preSolution
-		Debug Win32 = Debug Win32
-		Release Win32 = Release Win32
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
 	EndGlobalSection
-	GlobalSection(ProjectConfiguration) = postSolution
-		{0A7E60F8-690B-4B53-AC70-569793D3B303}.Debug Win32.ActiveCfg = Debug|Win32
-		{0A7E60F8-690B-4B53-AC70-569793D3B303}.Debug Win32.Build.0 = Debug|Win32
-		{0A7E60F8-690B-4B53-AC70-569793D3B303}.Release Win32.ActiveCfg = Release|Win32
-		{0A7E60F8-690B-4B53-AC70-569793D3B303}.Release Win32.Build.0 = Release|Win32
-		{3F5C1DBC-177A-4590-A999-4C5996EAFCFD}.Debug Win32.ActiveCfg = Debug Static|Win32
-		{3F5C1DBC-177A-4590-A999-4C5996EAFCFD}.Debug Win32.Build.0 = Debug Static|Win32
-		{3F5C1DBC-177A-4590-A999-4C5996EAFCFD}.Release Win32.ActiveCfg = Release Static|Win32
-		{3F5C1DBC-177A-4590-A999-4C5996EAFCFD}.Release Win32.Build.0 = Release Static|Win32
-		{5F1D2B5C-1757-4DC5-BD9F-2873C6A024E1}.Debug Win32.ActiveCfg = Debug Static|Win32
-		{5F1D2B5C-1757-4DC5-BD9F-2873C6A024E1}.Debug Win32.Build.0 = Debug Static|Win32
-		{5F1D2B5C-1757-4DC5-BD9F-2873C6A024E1}.Release Win32.ActiveCfg = Release Static|Win32
-		{5F1D2B5C-1757-4DC5-BD9F-2873C6A024E1}.Release Win32.Build.0 = Release Static|Win32
-		{87C23CC5-9CB3-43F2-AB4D-FF638945324C}.Debug Win32.ActiveCfg = Debug|Win32
-		{87C23CC5-9CB3-43F2-AB4D-FF638945324C}.Debug Win32.Build.0 = Debug|Win32
-		{87C23CC5-9CB3-43F2-AB4D-FF638945324C}.Release Win32.ActiveCfg = Release|Win32
-		{87C23CC5-9CB3-43F2-AB4D-FF638945324C}.Release Win32.Build.0 = Release|Win32
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0A7E60F8-690B-4B53-AC70-569793D3B303}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0A7E60F8-690B-4B53-AC70-569793D3B303}.Debug|Win32.Build.0 = Debug|Win32
+		{0A7E60F8-690B-4B53-AC70-569793D3B303}.Release|Win32.ActiveCfg = Release|Win32
+		{0A7E60F8-690B-4B53-AC70-569793D3B303}.Release|Win32.Build.0 = Release|Win32
+		{3F5C1DBC-177A-4590-A999-4C5996EAFCFD}.Debug|Win32.ActiveCfg = Debug Static|Win32
+		{3F5C1DBC-177A-4590-A999-4C5996EAFCFD}.Debug|Win32.Build.0 = Debug Static|Win32
+		{3F5C1DBC-177A-4590-A999-4C5996EAFCFD}.Release|Win32.ActiveCfg = Release Static|Win32
+		{3F5C1DBC-177A-4590-A999-4C5996EAFCFD}.Release|Win32.Build.0 = Release Static|Win32
+		{5F1D2B5C-1757-4DC5-BD9F-2873C6A024E1}.Debug|Win32.ActiveCfg = Debug Static|Win32
+		{5F1D2B5C-1757-4DC5-BD9F-2873C6A024E1}.Debug|Win32.Build.0 = Debug Static|Win32
+		{5F1D2B5C-1757-4DC5-BD9F-2873C6A024E1}.Release|Win32.ActiveCfg = Release Static|Win32
+		{5F1D2B5C-1757-4DC5-BD9F-2873C6A024E1}.Release|Win32.Build.0 = Release Static|Win32
+		{87C23CC5-9CB3-43F2-AB4D-FF638945324C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{87C23CC5-9CB3-43F2-AB4D-FF638945324C}.Debug|Win32.Build.0 = Debug|Win32
+		{87C23CC5-9CB3-43F2-AB4D-FF638945324C}.Release|Win32.ActiveCfg = Release|Win32
+		{87C23CC5-9CB3-43F2-AB4D-FF638945324C}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-	EndGlobalSection
-	GlobalSection(ExtensibilityAddIns) = postSolution
+		SolutionGuid = {13D21859-E3E1-49BC-ABAE-A870C1A5B287}
 	EndGlobalSection
 EndGlobal
